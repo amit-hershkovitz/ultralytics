@@ -4,6 +4,7 @@ import subprocess
 
 from ultralytics.cfg import TASK2DATA, TASK2METRIC, get_save_dir
 from ultralytics.utils import DEFAULT_CFG, DEFAULT_CFG_DICT, LOGGER, NUM_THREADS, checks
+from ultralytics import settings
 
 
 def run_ray_tune(
@@ -44,7 +45,7 @@ def run_ray_tune(
         import ray
         from ray import tune
         from ray.air import RunConfig
-        from ray.air.integrations.wandb import WandbLoggerCallback
+        from ray.air.integrations.wandb import WandbLoggerCallback, MLFlowLoggerCallback
         from ray.tune.schedulers import ASHAScheduler
     except ImportError:
         raise ModuleNotFoundError('Ray Tune required but not found. To install run: pip install "ray[tune]"')
@@ -129,6 +130,13 @@ def run_ray_tune(
 
     # Define the callbacks for the hyperparameter search
     tuner_callbacks = [WandbLoggerCallback(project="YOLOv8-tune")] if wandb else []
+
+    if settings['mlflow']:
+        import mlflow
+        tuner_callbacks.append(MLFlowLoggerCallback(tracking_uri=mlflow.get_tracking_uri(),
+                                                    experiment_name='YOLOv11-tune',
+                                                    save_artifact=True)
+                               )
 
     # Create the Ray Tune hyperparameter search tuner
     tune_dir = get_save_dir(DEFAULT_CFG, name="tune").resolve()  # must be absolute dir
