@@ -45,7 +45,8 @@ def run_ray_tune(
         import ray
         from ray import tune
         from ray.air import RunConfig
-        from ray.air.integrations.wandb import WandbLoggerCallback, MLFlowLoggerCallback
+        from ray.air.integrations.wandb import WandbLoggerCallback
+        from ray.air.integrations.mlflow import MLflowLoggerCallback
         from ray.tune.schedulers import ASHAScheduler
     except ImportError:
         raise ModuleNotFoundError('Ray Tune required but not found. To install run: pip install "ray[tune]"')
