@@ -134,7 +134,7 @@ def run_ray_tune(
 
     if settings['mlflow']:
         import mlflow
-        tuner_callbacks.append(MLFlowLoggerCallback(tracking_uri=mlflow.get_tracking_uri(),
+        tuner_callbacks.append(MLflowLoggerCallback(tracking_uri=mlflow.get_tracking_uri(),
                                                     experiment_name='YOLOv11-tune',
                                                     save_artifact=True)
                                )
